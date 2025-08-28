@@ -16,7 +16,9 @@ const register = async (req: Request, res: Response): Promise<RegisterResponse> 
 
     email = email.trim().toLowerCase();
 
-    const existingUser = await User.findOne({ $or: [{ email }] });
+    const existingUser = await User.findOne({ email });
+
+    console.log(existingUser)
 
     if (existingUser) {
       return unauthorizedResponse(
