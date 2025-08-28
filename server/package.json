@@ -22,7 +22,12 @@
     "express": "^4.19.2",
     "helmet": "^7.1.0",
     "http-errors": "^2.0.0",
-    "morgan": "^1.10.0"
+    "mongoose": "^8.18.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.10",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",
@@ -32,6 +37,7 @@
     "@types/morgan": "^1.9.6",
     "@types/node": "^20.11.30",
     "@types/supertest": "^2.0.16",
+    "@types/swagger-ui-express": "^4.1.8",
     "@typescript-eslint/eslint-plugin": "^7.5.0",
     "@typescript-eslint/parser": "^7.5.0",
     "eslint": "^8.57.0",
@@ -45,5 +51,3 @@
     "typescript": "^5.4.3"
   }
 }
-
-

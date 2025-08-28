@@ -4,6 +4,9 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import createHttpError from 'http-errors';
+import { serve, setup } from 'swagger-ui-express';
+import * as openApi from './documentation/swagger.json';
+
 
 const app = express();
 
@@ -13,6 +16,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan('dev'));
+
+app.use(
+  '/documentation',
+  serve,
+  setup(openApi, {
+    customCss: '.swagger-ui .topbar { display: none }',
+  })
+);
 
 app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({ ok: true });
