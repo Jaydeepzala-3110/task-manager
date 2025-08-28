@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import createHttpError from 'http-errors';
-import Routes from './routes/index'
+import Routes from './routes/index';
 import { serve, setup } from 'swagger-ui-express';
 import * as openApi from './documentation/swagger.json';
 
@@ -26,7 +26,6 @@ app.use(
 );
 
 app.use('/api', Routes);
-
 
 app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({ ok: true });

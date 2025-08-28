@@ -6,15 +6,20 @@ const registerValidation = {
     email: Joi.string().email().required(),
     password: Joi.string()
       .min(8)
-      .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$"))
+      .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'))
       .required()
       .messages({
-        "string.pattern.base":
-          "Password must contain at least one lowercase, one uppercase letter, and one number",
+        'string.pattern.base':
+          'Password must contain at least one lowercase, one uppercase letter, and one number',
       }),
   }),
 };
 
-export default registerValidation;
+const loginValidation = {
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
+};
 
-export { registerValidation };
+export { registerValidation, loginValidation };

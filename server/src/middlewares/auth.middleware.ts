@@ -12,7 +12,11 @@ export function auth(roles: string[]) {
 
       const decodedToken: any = verifyToken(tokenString as string);
 
-      if (!decodedToken || !decodedToken?.role || decodedToken?.type !== TokenTypeEnum.Auth) {
+      if (
+        !decodedToken ||
+        !decodedToken?.role ||
+        decodedToken?.type !== TokenTypeEnum.Auth
+      ) {
         return unauthorizedResponse(res, 'Access denied');
       }
 

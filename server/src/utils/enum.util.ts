@@ -23,14 +23,14 @@ export enum ActivityActionEnum {
 }
 
 export enum UserStatusEnum {
-    Active = 'active',
-    Inactive = 'inactive',
+  Active = 'active',
+  Inactive = 'inactive',
 }
 
 export enum TokenTypeEnum {
-    Auth = 'auth',
-    Refresh = 'refresh',
-    Invite = 'invite',
-    Reset = 'reset',
-    Verify = 'verify',
+  Auth = 'auth',
+  Refresh = 'refresh',
+  Invite = 'invite',
+  Reset = 'reset',
+  Verify = 'verify',
 }

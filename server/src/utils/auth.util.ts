@@ -1,10 +1,16 @@
 import 'dotenv/config';
-import { sign, verify, type Secret, type SignOptions, type JwtPayload } from 'jsonwebtoken';
+import {
+  sign,
+  verify,
+  type Secret,
+  type SignOptions,
+  type JwtPayload,
+} from 'jsonwebtoken';
 import { hash, compare } from 'bcrypt';
 
 const getToken = (
   payload: string | Buffer | Record<string, unknown>,
-  expiresIn: string | number = '12h',
+  expiresIn: string | number = '12h'
 ) => {
   const secret: Secret = process.env.JWT_SECRET as Secret;
   const options: SignOptions = { expiresIn: expiresIn as any };
@@ -24,10 +30,4 @@ const verifyPassword = async (password: string, hash: string) => {
   return await compare(password, hash);
 };
 
-export {
-  hashPassword,
-  verifyPassword,
-  getToken,
-  verifyToken,
-};
-
+export { hashPassword, verifyPassword, getToken, verifyToken };
