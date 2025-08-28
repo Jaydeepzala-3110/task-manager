@@ -7,7 +7,6 @@ import createHttpError from 'http-errors';
 import { serve, setup } from 'swagger-ui-express';
 import * as openApi from './documentation/swagger.json';
 
-
 const app = express();
 
 app.use(helmet());
@@ -33,12 +32,11 @@ app.use((_req, _res, next) => {
   next(createHttpError(404, 'Not Found'));
 });
 
+type HttpErrorLike = { status?: number; message?: string };
+
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-  const status = (err as any)?.status || 500;
-  const message = (err as any)?.message || 'Internal Server Error';
-  res.status(status).json({ error: message });
+  const { status, message } = (err as HttpErrorLike) || {};
+  res.status(status || 500).json({ error: message });
 });
 
 export default app;
-
-

@@ -22,4 +22,3 @@ mongoose
 server.listen(PORT, () => {
   logger.info(`Server listening on http://localhost:${PORT}`);
 });
-

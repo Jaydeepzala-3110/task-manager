@@ -15,7 +15,11 @@ const logConfiguration = {
       stack: true,
     }),
     winston.format.printf(
-      (info : any) => `${info.level}: ${info.label}: ${[info.timestamp]}: ${info.message}`
+      (info: winston.Logform.TransformableInfo & { label?: string }) => {
+        const label = info.label ?? '';
+        const timestamp = info.timestamp ?? '';
+        return `${info.level}: ${label}: ${timestamp}: ${info.message}`;
+      }
     )
   ),
   transports: [new winston.transports.Console()],
