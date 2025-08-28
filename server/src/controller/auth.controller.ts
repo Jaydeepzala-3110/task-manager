@@ -1,7 +1,7 @@
 import User from '../models/user.model';
 import { LoginRequestBody, RegisterRequestBody } from '../types/auth.type';
 import { getToken, hashPassword } from '../utils/auth.util';
-import { TokenTypeEnum } from '../utils/enum.util';
+import { TokenTypeEnum, UserRoleEnum } from '../utils/enum.util';
 import { logger } from '../utils/logger';
 import {
   internalServerErrorResponse,
@@ -14,7 +14,7 @@ import { compare } from 'bcrypt';
 
 const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    let { username, email, password }: RegisterRequestBody = req.body;
+    let { username, email, password , role  = UserRoleEnum.MEMBER }: RegisterRequestBody = req.body;
 
     email = email.trim().toLowerCase();
 
@@ -33,6 +33,7 @@ const register = async (req: Request, res: Response): Promise<void> => {
       username,
       email,
       password,
+      role
     });
 
     await user.save();
@@ -93,11 +94,27 @@ const login = async (req: Request, res: Response): Promise<void> => {
       role: user.role,
     };
 
-    return successResponse(res, 'Login successful', { accessToken, ususerDataer });
+    return successResponse(res, 'Login successful', { accessToken, userData });
   } catch (error) {
     logger.error(error);
     return internalServerErrorResponse(res, 'Something went wrong!', error);
   }
 };
 
-export { register, login };
+const logout = async (req: Request, res: Response): Promise<void> => {
+  try {
+    
+    res.clearCookie("accessToken", {
+        // httpOnly: true,
+        // secure: process.env.NODE_ENV === "production", 
+        // sameSite: "strict",
+      });
+
+    return successResponse(res, 'Logout successful');
+  } catch (error) {
+    logger.error(error);
+    return internalServerErrorResponse(res, 'Something went wrong during logout!', error);
+  }
+};
+
+export { register, login, logout };
