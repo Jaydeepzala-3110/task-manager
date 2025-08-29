@@ -3,6 +3,7 @@ import User from '../models/user.model';
 import { TokenTypeEnum, UserStatusEnum } from '../utils/enum.util';
 import { verifyToken } from '../utils/auth.util';
 import { unauthorizedResponse } from '../utils/response.util';
+import { logger } from '../utils/logger';
 
 export function auth(roles: string[]) {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -26,6 +27,7 @@ export function auth(roles: string[]) {
         status: UserStatusEnum.Active,
       });
 
+      logger.info('user' , user)
       if (!user) {
         return unauthorizedResponse(res, 'Access denied');
       }
