@@ -21,6 +21,10 @@ const userSchema = new Schema(
       type: String,
       trim: true,
     },
+    // status : {
+    //  enum : ['active' , 'blocked'],
+    //  default : 'active'
+    // },
     role: {
       type: String,
       enum: UserRoleEnum,

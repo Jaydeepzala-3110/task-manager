@@ -24,7 +24,7 @@ export function auth(roles: string[]) {
         _id: decodedToken.id,
         role: decodedToken.role,
         status: UserStatusEnum.Active,
-      }).populate('permissions');
+      });
 
       if (!user) {
         return unauthorizedResponse(res, 'Access denied');
