@@ -1,9 +1,13 @@
 import * as Joi from 'joi';
+import { UserRoleEnum } from '../utils/enum.util';
 
 const registerValidation = {
   body: Joi.object().keys({
     username: Joi.string().max(30).required(),
     email: Joi.string().email().required(),
+    role: Joi.string()
+      .valid(...Object.values(UserRoleEnum))
+      .optional(),
     password: Joi.string()
       .min(8)
       .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'))

@@ -14,7 +14,7 @@ import { compare } from 'bcrypt';
 
 const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    let { username, email, password , role  = UserRoleEnum.MEMBER }: RegisterRequestBody = req.body;
+    let { username, email, password , role = UserRoleEnum.MEMBER }: RegisterRequestBody = req.body;
 
     email = email.trim().toLowerCase();
 
@@ -39,7 +39,7 @@ const register = async (req: Request, res: Response): Promise<void> => {
     await user.save();
 
     const accessToken = getToken({
-      id: user._id,
+      id: user.id,
       role: user.role,
       type: TokenTypeEnum.Auth,
     });
@@ -81,7 +81,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     const accessToken = getToken({
-      id: user._id,
+      id: user.id,
       role: user.role,
       type: TokenTypeEnum.Auth,
     });
@@ -104,9 +104,9 @@ const logout = async (req: Request, res: Response): Promise<void> => {
   try {
     
     res.clearCookie("accessToken", {
-        // httpOnly: true,
-        // secure: process.env.NODE_ENV === "production", 
-        // sameSite: "strict",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", 
+        sameSite: "strict",
       });
 
     return successResponse(res, 'Logout successful');

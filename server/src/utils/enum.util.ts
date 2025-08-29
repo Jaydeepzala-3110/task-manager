@@ -22,15 +22,15 @@ export enum ActivityActionEnum {
   DELETE = 'delete',
 }
 
-export enum UserStatusEnum {
-  Active = 'active',
-  Inactive = 'inactive',
-}
-
 export enum TokenTypeEnum {
   Auth = 'auth',
   Refresh = 'refresh',
   Invite = 'invite',
   Reset = 'reset',
   Verify = 'verify',
+}
+
+export enum UserStatusEnum {
+  Active= 'active',
+  Bloacked = 'blocked',
 }

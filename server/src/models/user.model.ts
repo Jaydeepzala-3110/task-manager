@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IUser } from '../types/user.type';
-import { UserRoleEnum } from '../utils/enum.util';
+import { UserRoleEnum, UserStatusEnum } from '../utils/enum.util';
 
 const userSchema = new Schema(
   {
@@ -21,10 +21,11 @@ const userSchema = new Schema(
       type: String,
       trim: true,
     },
-    // status : {
-    //  enum : ['active' , 'blocked'],
-    //  default : 'active'
-    // },
+    status: {
+      type: String,
+      enum: Object.values(UserStatusEnum),
+      default: UserStatusEnum.Active,
+    },
     role: {
       type: String,
       enum: UserRoleEnum,
