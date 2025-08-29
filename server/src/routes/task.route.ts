@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { createTask, updateTask } from '../controller/task.controller';
+import { createTask, deleteTask, updateTask } from '../controller/task.controller';
 import { validate } from '../utils/validation.util';
-import { createTaskValidation, updateTaskValidation } from '../validations/task.validation';
+import { createTaskValidation, deleteTaskValidation, updateTaskValidation } from '../validations/task.validation';
 import { auth } from '../middlewares/auth.middleware';
 import { UserRoleEnum } from '../utils/enum.util';
 
@@ -20,5 +20,13 @@ router.put(
   validate(updateTaskValidation),
   updateTask
 );
+
+router.delete(
+  '/delete/:id',
+  auth([UserRoleEnum.MEMBER]),
+  validate(deleteTaskValidation),
+  deleteTask
+);
+
 
 export default router;

@@ -2,15 +2,16 @@ import { Request, Response } from 'express';
 import { TaskModel } from '../models/task.model';
 import { UserRoleEnum, ActivityActionEnum } from '../utils/enum.util';
 import { logger } from '../utils/logger';
-import { successResponse, internalServerErrorResponse, notFoundResponse, unauthorizedResponse } from '../utils/response.util';
+import {
+  successResponse,
+  internalServerErrorResponse,
+  notFoundResponse,
+  unauthorizedResponse,
+} from '../utils/response.util';
 import ActivityLog from '../models/activityLog.model';
 import { ICreateTaskRequest, UpdateTaskRequest } from '../types/task.type';
 
 const canAccessTask = (task: any, userId: string, userRole: string): boolean => {
-
-  if(task.createdBy.toString() === userId) {
-    logger.info("user this is the one ")
-  }
   return userRole === UserRoleEnum.ADMIN || task.createdBy.toString() === userId;
 };
 
@@ -42,18 +43,17 @@ export const createTask = async (req: Request, res: Response): Promise<void> => 
 
 export const updateTask = async (req: Request, res: Response): Promise<void> => {
   try {
-    logger.info('controller reached here')
     const { id } = req.params;
 
     const updateData: UpdateTaskRequest = req.body;
 
-    const task = await TaskModel.findOne({_id : id});
+    const task = await TaskModel.findOne({ _id: id });
 
     if (!task) {
       return notFoundResponse(res, 'Task not found');
     }
 
-    if (!canAccessTask(task,req.authUser.id,req.authUser.role)) {
+    if (!canAccessTask(task, req.authUser.id, req.authUser.role)) {
       return unauthorizedResponse(res, 'You do not have permission to update this task');
     }
 
@@ -62,7 +62,7 @@ export const updateTask = async (req: Request, res: Response): Promise<void> => 
     }
 
     const oldTask = { ...task.toObject() };
-    
+
     Object.assign(task, updateData);
 
     await task.save();
@@ -78,5 +78,35 @@ export const updateTask = async (req: Request, res: Response): Promise<void> => 
   } catch (error) {
     logger.error(error);
     return internalServerErrorResponse(res, 'Failed to update task', error);
+  }
+};
+
+export const deleteTask = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const task = await TaskModel.findOne({ _id: id });
+
+    if (!task) {
+      return notFoundResponse(res, 'Task not found');
+    }
+
+    if (!canAccessTask(task, req.authUser.id, req.authUser.role)) {
+      return unauthorizedResponse(res, 'You do not have permission to delete this task');
+    }
+
+    await ActivityLog.updateOne({
+      task: task._id,
+      user: req.authUser.id,
+      action: ActivityActionEnum.DELETE,
+      changes: { deletedTask: task.toObject() },
+    });
+
+    await TaskModel.deleteOne({ _id: id });
+
+    return successResponse(res, 'Task deleted successfully');
+  } catch (error) {
+    logger.error('Error deleting task:', error);
+    return internalServerErrorResponse(res, 'Failed to delete task', error);
   }
 };

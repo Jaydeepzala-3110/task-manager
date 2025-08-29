@@ -30,3 +30,9 @@ export const updateTaskValidation = {
     tags: Joi.array().items(Joi.string().max(10)).max(10).optional(),
   }),
 };
+
+export const deleteTaskValidation = {
+  params: Joi.object({
+    id: Joi.string().required(),
+  }),
+};

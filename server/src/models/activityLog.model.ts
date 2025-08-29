@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import { IActivityLog } from '../types/activityLogs.type';
 import { ActivityActionEnum } from '../utils/enum.util';
 
 const activityLogSchema = new Schema(
