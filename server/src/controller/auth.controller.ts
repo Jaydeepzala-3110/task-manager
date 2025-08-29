@@ -54,7 +54,6 @@ const register = async (req: Request, res: Response): Promise<void> => {
     return successResponse(res, 'User registered successfully', { accessToken, newUser });
   } catch (error) {
     logger.error(error);
-
     return internalServerErrorResponse(res, 'Something went wrong!', error);
   }
 };

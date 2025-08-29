@@ -32,7 +32,7 @@ export interface UpdateTaskRequest {
   priority?: TaskPriorityEnum;
   dueDate?: Date;
   tags?: string[];
-  assignee?: mongoose.Types.ObjectId;
+  assignee?:mongoose.Types.ObjectId
 }
 
 export interface TaskQueryParams {
