@@ -2,7 +2,7 @@
   "name": "mini-task-manager-server",
   "version": "1.0.0",
   "private": true,
-  "description": "Backend server for Mini Task Manager",
+  "description": "Backend server for Taskify",
   "main": "build/server.js",
   "types": "build/types.d.ts",
   "license": "MIT",
