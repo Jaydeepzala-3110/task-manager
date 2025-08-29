@@ -41,6 +41,82 @@ export const createTask = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
+export const listTasks = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      status,
+      priority,
+      assignee,
+      tags,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+      dueDateFrom,
+      dueDateTo,
+    } = req.query as any;
+
+    const numericPage = Math.max(parseInt(page, 10) || 1, 1);
+    const numericLimit = Math.min(Math.max(parseInt(limit, 10) || 10, 1), 100);
+    const skip = (numericPage - 1) * numericLimit;
+
+    const filter: any = {};
+
+    if (search) {
+      filter.$or = [
+        { title: { $regex: new RegExp(search, 'i') } },
+        { description: { $regex: new RegExp(search, 'i') } },
+      ];
+    }
+
+    if (status) filter.status = status;
+    if (priority) filter.priority = priority;
+    if (assignee) filter.assignee = assignee;
+    if (tags) filter.tags = { $in: tags.split(',').map((t: string) => t.trim()).filter(Boolean) };
+
+    if (dueDateFrom || dueDateTo) {
+      filter.dueDate = {} as any;
+      if (dueDateFrom) filter.dueDate.$gte = new Date(dueDateFrom);
+      if (dueDateTo) filter.dueDate.$lte = new Date(dueDateTo);
+    }
+
+    if (req.authUser.role !== UserRoleEnum.ADMIN) {
+      filter.$and = (filter.$and || []).concat([
+        {
+          $or: [
+            { createdBy: req.authUser.id },
+            { assignee: req.authUser.id },
+          ],
+        },
+      ]);
+    }
+
+    const sort: any = { [sortBy]: sortOrder === 'asc' ? 1 : -1 };
+
+    const [tasks, total] = await Promise.all([
+      TaskModel.find(filter)
+        .sort(sort)
+        .skip(skip)
+        .limit(numericLimit)
+        .lean(),
+      TaskModel.countDocuments(filter),
+    ]);
+
+    const meta = {
+      page: numericPage,
+      limit: numericLimit,
+      total,
+      totalPages: Math.ceil(total / numericLimit) || 1,
+    };
+
+    return successResponse(res, 'Tasks fetched successfully', { tasks, meta });
+  } catch (error) {
+    logger.error(error);
+    return internalServerErrorResponse(res, 'Failed to fetch tasks', error);
+  }
+};
+
 export const updateTask = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
