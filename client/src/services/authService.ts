@@ -28,7 +28,12 @@ class AuthService {
       method: 'POST',
       body: JSON.stringify(userData),
     });
-    return response.data;
+    
+    // Return the data directly since the API response structure is { data: { accessToken, userData } }
+    return {
+      accessToken: response.data.accessToken,
+      userData: response.data.userData
+    };
   }
 
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
@@ -36,7 +41,12 @@ class AuthService {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
-    return response.data;
+    
+    // Return the data directly since the API response structure is { data: { accessToken, userData } }
+    return {
+      accessToken: response.data.accessToken,
+      userData: response.data.userData
+    };
   }
 
   async logout(): Promise<void> {

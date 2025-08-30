@@ -37,10 +37,8 @@ const Register = () => {
     try {
       await dispatch(registerUser(data)).unwrap();
       
-      // Show success message or redirect
       reset();
     } catch (error) {
-      // Error is handled by the Redux slice
       console.error('Registration failed:', error);
     }
   };
@@ -76,22 +74,22 @@ const Register = () => {
             )}
 
             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-              {/* Full Name */}
+              {/* Username */}
               <div className="space-y-2">
                 <label
-                  htmlFor="name"
+                  htmlFor="username"
                   className="block text-sm font-medium leading-6 text-white dark:text-muted-dark"
                 >
-                  Full name
+                  Username
                 </label>
                 <div className="mt-2">
                   <input
                     {...register('username')}
-                    id="name"
-                    name="name"
+                    id="username"
+                    name="username"
                     type="text"
-                    placeholder="Jaydeep Zala"
-                    className={`block w-full dark:bg-neutral-900 px-4 rounded-md border-0 py-1.5  shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 ${
+                    placeholder="Enter your username"
+                    className={`block w-full bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 ${
                       errors.username ? 'border-red-500' : ''
                     }`}
                   />
@@ -116,7 +114,7 @@ const Register = () => {
                     name="email"
                     type="email"
                     placeholder="hello@johndoe.com"
-                    className={`block w-full dark:bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 ${
+                    className={`block w-full bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 ${
                       errors.email ? 'border-red-500' : ''
                     }`}
                   />
@@ -141,8 +139,8 @@ const Register = () => {
                     name="password"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
-                    autoComplete="current-password"
-                    className={`block w-full dark:bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 pr-12 ${
+                    autoComplete="new-password"
+                    className={`block w-full bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 pr-12 ${
                       errors.password ? 'border-red-500' : ''
                     }`}
                   />

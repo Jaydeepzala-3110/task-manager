@@ -44,14 +44,14 @@ const register = async (req: Request, res: Response): Promise<void> => {
       type: TokenTypeEnum.Auth,
     });
 
-    const newUser = {
+    const userData = {
       _id: user._id,
       username: user.username,
       email: user.email,
       role: user.role,
     };
 
-    return successResponse(res, 'User registered successfully', { accessToken, newUser });
+    return successResponse(res, 'User registered successfully', { accessToken, userData });
   } catch (error) {
     logger.error(error);
     return internalServerErrorResponse(res, 'Something went wrong!', error);

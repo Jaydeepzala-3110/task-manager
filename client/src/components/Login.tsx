@@ -16,16 +16,28 @@ const Login = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
     reset,
+    clearErrors,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
+
+  // Watch form fields to clear errors when user starts typing
+  const watchedFields = watch(['email', 'password']);
 
   useEffect(() => {
     // Clear any existing errors when component mounts
     dispatch(clearError());
   }, [dispatch]);
+
+  useEffect(() => {
+    // Clear form errors when user starts typing
+    if (watchedFields[0] || watchedFields[1]) {
+      clearErrors();
+    }
+  }, [watchedFields, clearErrors]);
 
   useEffect(() => {
     // Redirect if already authenticated
@@ -93,7 +105,7 @@ const Login = () => {
                     name="email"
                     type="email"
                     placeholder="hello@johndoe.com"
-                    className={`block w-full dark:bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 ${
+                    className={`block w-full bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 ${
                       errors.email ? 'border-red-500' : ''
                     }`}
                   />
@@ -119,7 +131,7 @@ const Login = () => {
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     autoComplete="current-password"
-                    className={`block w-full dark:bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 pr-12 ${
+                    className={`block w-full bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 pr-12 ${
                       errors.password ? 'border-red-500' : ''
                     }`}
                   />
