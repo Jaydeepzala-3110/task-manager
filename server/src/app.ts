@@ -10,13 +10,24 @@ import * as openApi from './documentation/swagger.json';
 
 const app = express();
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false, 
+}));
+
 app.use(
   cors({
-    origin: ['https://taskify.dpdns.org', 'https://www.taskify.dpdns.org'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+    origin: [
+      'https://taskify.dpdns.org', 
+      'https://www.taskify.dpdns.org',
+      'http://taskify.dpdns.org', 
+      'http://www.taskify.dpdns.org',
+      'http://localhost:4000', 
+      'http://localhost:80'
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
-  })
+    optionsSuccessStatus: 200, 
+})
 );
 
 app.use(express.json());
@@ -44,7 +55,7 @@ app.use((_req, _res, next) => {
 
 type HttpErrorLike = { status?: number; message?: string };
 
-app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   const { status, message } = (err as HttpErrorLike) || {};
   res.status(status || 500).json({ error: message });
 });
