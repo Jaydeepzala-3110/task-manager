@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import { apiService } from '../services/api';
 
-// Types
 export interface Task {
   _id: string;
   title: string;
@@ -136,7 +135,6 @@ export const deleteTask = createAsyncThunk(
   }
 );
 
-// Task slice
 const taskSlice = createSlice({
   name: 'tasks',
   initialState,
@@ -164,7 +162,6 @@ const taskSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Fetch tasks
     builder
       .addCase(fetchTasks.pending, (state) => {
         state.loading = true;
@@ -183,7 +180,6 @@ const taskSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    // Create task
     builder
       .addCase(createTask.pending, (state) => {
         state.loading = true;
@@ -193,7 +189,6 @@ const taskSlice = createSlice({
         state.loading = false;
         state.tasks.unshift(action.payload);
         state.error = null;
-        // Update total count
         if (state.meta) {
           state.meta.total += 1;
         }
@@ -203,7 +198,6 @@ const taskSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    // Update task
     builder
       .addCase(updateTask.pending, (state) => {
         state.loading = true;
@@ -225,7 +219,6 @@ const taskSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    // Delete task
     builder
       .addCase(deleteTask.pending, (state) => {
         state.loading = true;
@@ -237,7 +230,6 @@ const taskSlice = createSlice({
         if (state.currentTask?._id === action.payload) {
           state.currentTask = null;
         }
-        // Update total count
         if (state.meta) {
           state.meta.total = Math.max(0, state.meta.total - 1);
         }

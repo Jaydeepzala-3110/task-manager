@@ -1,4 +1,3 @@
-import apiService from './api';
 
 const API_BASE_URL = 'http://localhost:4000/api';
 
@@ -24,7 +23,6 @@ class AdminService {
         ...options,
       };
 
-      // Add auth token if available
       const token = localStorage.getItem('token');
       if (token) {
         config.headers = {
@@ -50,12 +48,10 @@ class AdminService {
     }
   }
 
-  // Admin Dashboard Overview
   async getDashboardOverview(): Promise<ApiResponse<any>> {
     return this.request<any>('/admin/dashboard/overview');
   }
 
-  // Admin Task Management
   async getAllTasksForAdmin(params?: {
     page?: number;
     limit?: number;
@@ -81,7 +77,6 @@ class AdminService {
     });
   }
 
-  // Admin User Management
   async getAllUsersForAdmin(params?: {
     page?: number;
     limit?: number;

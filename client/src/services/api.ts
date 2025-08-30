@@ -23,7 +23,6 @@ class ApiService {
         ...options,
       };
 
-      // Add auth token if available
       const token = localStorage.getItem('token');
       if (token) {
         config.headers = {
@@ -49,7 +48,6 @@ class ApiService {
     }
   }
 
-  // User Management (from user.controller.ts)
   async getUsers(params?: {
     page?: number;
     limit?: number;
@@ -75,7 +73,6 @@ class ApiService {
     });
   }
 
-  // Task Management (from task.controller.ts)
   async getTasks(params?: {
     page?: number;
     limit?: number;
@@ -119,7 +116,6 @@ class ApiService {
     });
   }
 
-  // Stats Management (from stats.controller.ts)
   async getStats(): Promise<ApiResponse<any>> {
     return this.request<any>('/stats/overview');
   }
@@ -132,7 +128,6 @@ class ApiService {
     return this.request<any>('/stats/task');
   }
 
-  // Auth Management
   async getCurrentUser(): Promise<ApiResponse<any>> {
     return this.request<any>('/auth/me');
   }

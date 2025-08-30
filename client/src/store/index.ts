@@ -7,7 +7,7 @@ import taskReducer from './taskSlice';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth'], // Only persist auth state
+  whitelist: ['auth'], 
 };
 
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);

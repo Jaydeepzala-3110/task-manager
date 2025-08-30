@@ -1,8 +1,6 @@
 import { authService } from '@/services/authService';
 import { createSlice, createAsyncThunk , type PayloadAction } from '@reduxjs/toolkit';
-// import { authService } from '../services/authService';
 
-// Types
 export interface User {
   _id: string;
   username: string;
@@ -34,7 +32,6 @@ export interface AuthResponse {
   userData: User;
 }
 
-// Initial state
 const initialState: AuthState = {
   user: null,
   token: localStorage.getItem('token'),
@@ -43,7 +40,6 @@ const initialState: AuthState = {
   error: null,
 };
 
-// Async thunks
 export const register = createAsyncThunk(
   'auth/register',
   async (userData: RegisterData, { rejectWithValue }) => {
@@ -80,7 +76,6 @@ export const logout = createAsyncThunk(
   }
 );
 
-// Auth slice
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -93,7 +88,6 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Register
     builder
       .addCase(register.pending, (state) => {
         state.loading = true;
@@ -111,7 +105,6 @@ const authSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    // Login
     builder
       .addCase(login.pending, (state) => {
         state.loading = true;
@@ -129,7 +122,6 @@ const authSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    // Logout
     builder
       .addCase(logout.pending, (state) => {
         state.loading = true;
