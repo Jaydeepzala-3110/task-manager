@@ -26,6 +26,7 @@ const Sidebar = ({ isCollapsed, onToggle, userRole, activeTab, onTabChange }: Si
     { id: 'overview', label: 'Overview', icon: Home },
     { id: 'users', label: 'Users', icon: Users },
     { id: 'tasks', label: 'Tasks', icon: ClipboardList },
+    { id: 'members', label: 'Members', icon: Users },
     { id: 'stats', label: 'Stats', icon: BarChart3 },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];

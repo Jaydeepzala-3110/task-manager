@@ -82,3 +82,4 @@ export const updateUserRole = async (req: Request, res: Response): Promise<void>
     return internalServerErrorResponse(res, 'Failed to update user role', error);
   }
 };
+
