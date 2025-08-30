@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Search, 
   Bell, 
@@ -8,6 +9,8 @@ import {
   ChevronDown,
   Menu
 } from 'lucide-react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { logout } from '../../store/authSlice';
 
 interface HeaderProps {
   isCollapsed: boolean;
@@ -18,6 +21,18 @@ interface HeaderProps {
 const Header = ({ isCollapsed, onToggleSidebar, userRole }: HeaderProps) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logout()).unwrap();
+      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   return (
     <header className={`bg-black border-b border-gray-800 h-16 fixed top-0 right-0 z-40 transition-all duration-300 ${
@@ -61,15 +76,15 @@ const Header = ({ isCollapsed, onToggleSidebar, userRole }: HeaderProps) => {
             >
               <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-medium">
-                  {userRole === 'admin' ? 'A' : 'M'}
+                  {user?.username?.charAt(0).toUpperCase() || (userRole === 'admin' ? 'A' : 'M')}
                 </span>
               </div>
               <div className="hidden md:block text-left">
                 <p className="text-white text-sm font-medium">
-                  {userRole === 'admin' ? 'Admin User' : 'Member User'}
+                  {user?.username || (userRole === 'admin' ? 'Admin User' : 'Member User')}
                 </p>
                 <p className="text-gray-400 text-xs">
-                  {userRole === 'admin' ? 'Administrator' : 'Team Member'}
+                  {user?.email || (userRole === 'admin' ? 'Administrator' : 'Team Member')}
                 </p>
               </div>
               <ChevronDown size={16} className="text-gray-400" />
@@ -88,7 +103,10 @@ const Header = ({ isCollapsed, onToggleSidebar, userRole }: HeaderProps) => {
                     Settings
                   </button>
                   <hr className="border-gray-700 my-1" />
-                  <button className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-gray-800 transition-colors">
+                  <button 
+                    onClick={handleLogout}
+                    className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-gray-800 transition-colors"
+                  >
                     <LogOut size={16} className="mr-3" />
                     Sign Out
                   </button>

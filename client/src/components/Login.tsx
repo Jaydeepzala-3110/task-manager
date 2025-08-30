@@ -1,24 +1,50 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate, Link } from 'react-router-dom';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { login, clearError } from '../store/authSlice';
+import { loginSchema, type LoginFormData } from '../lib/validations';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { loading, error, isAuthenticated, user } = useAppSelector((state) => state.auth);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  useEffect(() => {
+    // Clear any existing errors when component mounts
+    dispatch(clearError());
+  }, [dispatch]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    // TODO: Add API call to login user
+  useEffect(() => {
+    // Redirect if already authenticated
+    if (isAuthenticated && user) {
+      const redirectPath = user.role === 'admin' ? '/admin/dashboard' : '/member/dashboard';
+      navigate(redirectPath, { replace: true });
+    }
+  }, [isAuthenticated, user, navigate]);
+
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      await dispatch(login(data)).unwrap();
+      
+      // Reset form on success
+      reset();
+    } catch (error) {
+      // Error is handled by the Redux slice
+      console.error('Login failed:', error);
+    }
   };
 
   return (
@@ -44,7 +70,14 @@ const Login = () => {
           </div>
 
           <div className="mt-10">
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Error Toast */}
+            {error && (
+              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <p className="text-red-400 text-sm">{error}</p>
+              </div>
+            )}
+
+            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               {/* Email */}
               <div className="space-y-2">
                 <label
@@ -55,14 +88,18 @@ const Login = () => {
                 </label>
                 <div className="mt-2">
                   <input
+                    {...register('email')}
                     id="email"
                     name="email"
                     type="email"
                     placeholder="hello@johndoe.com"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="block w-full dark:bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6"
+                    className={`block w-full dark:bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 ${
+                      errors.email ? 'border-red-500' : ''
+                    }`}
                   />
+                  {errors.email && (
+                    <p className="mt-2 text-sm text-red-400">{errors.email.message}</p>
+                  )}
                 </div>
               </div>
 
@@ -76,33 +113,26 @@ const Login = () => {
                 </label>
                 <div className="mt-2 relative">
                   <input
+                    {...register('password')}
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     autoComplete="current-password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="block w-full dark:bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6"
+                    className={`block w-full dark:bg-neutral-900 px-4 rounded-md border-0 py-1.5 shadow-aceternity text-white placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 pr-12 ${
+                      errors.password ? 'border-red-500' : ''
+                    }`}
                   />
-                  <div className="absolute right-3 top-[30%]">
-                    {/* Eye Icon */}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-eye text-gray-400 cursor-pointer h-4"
-                    >
-                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                      <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-[30%] text-gray-400 hover:text-gray-300"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                  {errors.password && (
+                    <p className="mt-2 text-sm text-red-400">{errors.password.message}</p>
+                  )}
                 </div>
               </div>
 
@@ -110,9 +140,17 @@ const Login = () => {
               <div>
                 <button
                   type="submit"
-                  className="bg-neutral-900 cursor-pointer relative z-10 hover:bg-black/90 border border-transparent text-white text-sm md:text-sm transition font-medium duration-200 rounded-full px-4 py-2 flex items-center justify-center shadow-[0px_-1px_0px_0px_#FFFFFF40_inset,_0px_1px_0px_0px_#FFFFFF40_inset] w-full"
+                  disabled={loading}
+                  className="bg-neutral-900 cursor-pointer relative z-10 hover:bg-black/90 border border-transparent text-white text-sm md:text-sm transition font-medium duration-200 rounded-full px-4 py-2 flex items-center justify-center shadow-[0px_-1px_0px_0px_#FFFFFF40_inset,_0px_1px_0px_0px_#FFFFFF40_inset] w-full disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Sign In
+                  {loading ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2" size={16} />
+                      Signing In...
+                    </>
+                  ) : (
+                    'Sign In'
+                  )}
                 </button>
                 <p className="text-sm text-center mt-4 text-muted dark:text-muted-dark">
                   Don't have an account?{" "}

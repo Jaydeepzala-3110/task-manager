@@ -1,45 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../store/hooks';
 import AdminDashboard from '../admindashboard';
 import MemberDashboard from '../memberdashboard';
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  role: 'admin' | 'member';
-}
-
 const DashboardRouter = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { user, isAuthenticated, loading } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    // Simulate fetching user data - replace with actual API call
-    const fetchUser = async () => {
-      try {
-        // Mock API call - replace with actual authentication logic
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // For demo purposes, you can change this to test different roles
-        const mockUser: User = {
-          id: '1',
-          username: 'johndoe',
-          email: 'john@example.com',
-          role: 'admin' // Change to 'member' to test Member Dashboard
-        };
-        
-        setUser(mockUser);
-      } catch (error) {
-        console.error('Failed to fetch user:', error);
-        // Redirect to login if authentication fails
-        // window.location.href = '/login';
-      } finally {
-        setLoading(false);
-      }
-    };
+    // Redirect if not authenticated
+    if (!isAuthenticated || !user) {
+      navigate('/login', { replace: true });
+      return;
+    }
 
-    fetchUser();
-  }, []);
+    // Redirect to appropriate dashboard based on user role
+    const redirectPath = user.role === 'admin' ? '/admin/dashboard' : '/member/dashboard';
+    navigate(redirectPath, { replace: true });
+  }, [isAuthenticated, user, navigate]);
 
   if (loading) {
     return (
@@ -52,13 +31,13 @@ const DashboardRouter = () => {
     );
   }
 
-  if (!user) {
+  if (!isAuthenticated || !user) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-400 mb-4">User not authenticated</p>
           <button 
-            onClick={() => window.location.href = '/login'}
+            onClick={() => navigate('/login')}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
           >
             Go to Login

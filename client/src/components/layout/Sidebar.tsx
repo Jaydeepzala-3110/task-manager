@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Home
 } from 'lucide-react';
+import { useAppSelector } from '../../store/hooks';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -19,6 +20,8 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ isCollapsed, onToggle, userRole, activeTab, onTabChange }: SidebarProps) => {
+  const { user } = useAppSelector((state) => state.auth);
+  
   const adminNavItems = [
     { id: 'overview', label: 'Overview', icon: Home },
     { id: 'users', label: 'Users', icon: Users },
@@ -91,15 +94,15 @@ const Sidebar = ({ isCollapsed, onToggle, userRole, activeTab, onTabChange }: Si
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-medium">
-                  {userRole === 'admin' ? 'A' : 'M'}
+                  {user?.username?.charAt(0).toUpperCase() || (userRole === 'admin' ? 'A' : 'M')}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-white text-sm font-medium truncate">
-                  {userRole === 'admin' ? 'Admin User' : 'Member User'}
+                  {user?.username || (userRole === 'admin' ? 'Admin User' : 'Member User')}
                 </p>
                 <p className="text-gray-400 text-xs truncate">
-                  {userRole === 'admin' ? 'Administrator' : 'Team Member'}
+                  {user?.email || (userRole === 'admin' ? 'Administrator' : 'Team Member')}
                 </p>
               </div>
             </div>
