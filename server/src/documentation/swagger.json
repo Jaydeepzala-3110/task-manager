@@ -1,16 +1,12 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Mini Task Manager API",
+    "title": "Taskify API",
     "version": "1.0.0",
     "description": "A comprehensive task management API with user authentication, task CRUD operations, admin management, and statistics. This API supports role-based access control with admin and member roles.",
-    "license": {
-      "name": "MIT",
-      "url": "https://spdx.org/licenses/MIT.html"
-    },
     "contact": {
       "name": "API Support",
-      "email": "support@minitaskmanager.com"
+      "email": "jaydeepzala31@gmail.com"
     }
   },
   "servers": [
