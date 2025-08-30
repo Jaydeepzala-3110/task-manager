@@ -1,6 +1,6 @@
 import { type LoginCredentials, type RegisterData, type AuthResponse } from '../store/authSlice';
 
-const API_BASE_URL = 'http://localhost:4000/api';
+const API_BASE_URL = 'https://api.taskify.dpdns.org/api';
 
 class AuthService {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {

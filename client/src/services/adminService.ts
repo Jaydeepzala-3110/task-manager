@@ -1,5 +1,5 @@
 
-const API_BASE_URL = 'http://localhost:4000/api';
+const API_BASE_URL = 'https://api.taskify.dpdns.org/api';
 
 interface ApiResponse<T> {
   success: boolean;
