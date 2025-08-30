@@ -1,0 +1,26 @@
+# dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# build output (we rebuild inside container)
+build
+
+# environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# editor/OS files
+.DS_Store
+*.swp
+*.swo
+*.tmp
+*.log
+
+# git
+.git
+.gitignore

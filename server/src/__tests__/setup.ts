@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import { beforeAll, afterEach, afterAll } from '@jest/globals';
 
 let mongoServer: MongoMemoryServer;
 
-// Setup MongoDB Memory Server for testing
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
@@ -64,7 +64,7 @@ global.testUtils = {
     const jwt = require('jsonwebtoken');
     return jwt.sign(
       { id: userId, role, type: 'auth' },
-      process.env.JWT_SECRET || 'test-secret',
+      process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
   },
