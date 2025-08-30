@@ -1,7 +1,5 @@
-// API service for future integration with backend
-// This file will contain all the API calls to your backend controllers
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = 'http://localhost:4000/api';
 
 interface ApiResponse<T> {
   success: boolean;
@@ -26,7 +24,7 @@ class ApiService {
       };
 
       // Add auth token if available
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('token');
       if (token) {
         config.headers = {
           ...config.headers,
@@ -98,57 +96,43 @@ class ApiService {
       });
     }
     
-    return this.request<{ tasks: any[]; meta: any }>(`/tasks?${queryParams}`);
+    return this.request<{ tasks: any[]; meta: any }>(`/task/list?${queryParams}`);
   }
 
   async createTask(taskData: any): Promise<ApiResponse<any>> {
-    return this.request<any>('/tasks', {
+    return this.request<any>('/task/create', {
       method: 'POST',
       body: JSON.stringify(taskData),
     });
   }
 
   async updateTask(taskId: string, taskData: any): Promise<ApiResponse<any>> {
-    return this.request<any>(`/tasks/${taskId}`, {
+    return this.request<any>(`/task/update/${taskId}`, {
       method: 'PUT',
       body: JSON.stringify(taskData),
     });
   }
 
-  async deleteTask(taskId: string): Promise<ApiResponse<void>> {
-    return this.request<void>(`/tasks/${taskId}`, {
+  async deleteTask(taskId: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/task/delete/${taskId}`, {
       method: 'DELETE',
     });
   }
 
-  // Statistics (from stats.controller.ts)
-  async getOverviewStats(): Promise<ApiResponse<{
-    byStatus: any[];
-    byPriority: any[];
-    overdue: number;
-  }>> {
-    return this.request<{
-      byStatus: any[];
-      byPriority: any[];
-      overdue: number;
-    }>('/stats/overview');
+  // Stats Management (from stats.controller.ts)
+  async getStats(): Promise<ApiResponse<any>> {
+    return this.request<any>('/stats/overview');
   }
 
-  // Authentication (from auth.controller.ts)
-  async login(credentials: { email: string; password: string }): Promise<ApiResponse<{ token: string; user: any }>> {
-    return this.request<{ token: string; user: any }>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(credentials),
-    });
+  async getUserStats(userId: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/stats/user/${userId}`);
   }
 
-  async register(userData: { username: string; email: string; password: string }): Promise<ApiResponse<{ token: string; user: any }>> {
-    return this.request<{ token: string; user: any }>('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-    });
+  async getTaskStats(): Promise<ApiResponse<any>> {
+    return this.request<any>('/stats/task');
   }
 
+  // Auth Management
   async getCurrentUser(): Promise<ApiResponse<any>> {
     return this.request<any>('/auth/me');
   }

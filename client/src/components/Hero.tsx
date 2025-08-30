@@ -1,5 +1,4 @@
 import { Button } from "./ui/button";
-import Dashboard from "./Dashboard";
 
 const Hero = () => {
   return (
@@ -57,15 +56,21 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Dashboard Preview */}
+        {/* Call to Action */}
         <div className="mt-20">
-          <h2 className="text-3xl font-bold text-white mb-8">See it in action</h2>
-          <Dashboard />
+          <h2 className="text-3xl font-bold text-white mb-8">Ready to get started?</h2>
+          <p className="text-gray-400 text-lg mb-8">
+            Join thousands of users who are already organizing their tasks efficiently
+          </p>
+          <a href="/register" className="inline-block">
+            <Button className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-8 py-3 rounded-full text-lg font-semibold transition-all duration-300 hover:scale-105 transform shadow-lg">
+              Start Organizing Now
+            </Button>
+          </a>
         </div>
       </div>
     </section>
   );
 };
 
-
-export default Hero
+export default Hero;

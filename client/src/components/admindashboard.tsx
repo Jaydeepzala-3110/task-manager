@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { fetchTasks, clearError, deleteTask } from '../store/taskSlice';
 import { 
   Users, 
   ClipboardList, 
@@ -15,17 +17,7 @@ import StatCard from './layout/StatCard';
 import TaskTable from './layout/TaskTable';
 import UserTable from './layout/UserTable';
 import ChartCard from './layout/ChartCard';
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  status: 'pending' | 'in-progress' | 'completed';
-  priority: 'low' | 'medium' | 'high';
-  assignee: string;
-  dueDate: string;
-  createdAt: string;
-}
+import TaskForm from './TaskForm';
 
 interface User {
   id: string;
@@ -37,50 +29,27 @@ interface User {
 }
 
 const AdminDashboard = () => {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
+  const { tasks, loading, error, meta } = useAppSelector((state) => state.tasks);
+  
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
+  const [showCreateTask, setShowCreateTask] = useState(false);
+  const [showEditTask, setShowEditTask] = useState(false);
+  const [currentTask, setCurrentTask] = useState<any>(null);
 
-  // Mock data - replace with API calls later
-  const stats = {
-    totalUsers: 1247,
-    totalTasks: 3421,
-    completedTasks: 2156,
-    pendingTasks: 1265
-  };
+  useEffect(() => {
+    // Fetch all tasks when component mounts (admin can see all tasks)
+    dispatch(fetchTasks({ page: 1, limit: 10 }));
+  }, [dispatch]);
 
-  const mockTasks: Task[] = [
-    {
-      id: '1',
-      title: 'Implement user authentication',
-      description: 'Add JWT-based authentication system',
-      status: 'completed',
-      priority: 'high',
-      assignee: 'John Doe',
-      dueDate: '2024-01-15',
-      createdAt: '2024-01-01'
-    },
-    {
-      id: '2',
-      title: 'Design dashboard UI',
-      description: 'Create responsive dashboard interface',
-      status: 'in-progress',
-      priority: 'medium',
-      assignee: 'Jane Smith',
-      dueDate: '2024-01-20',
-      createdAt: '2024-01-05'
-    },
-    {
-      id: '3',
-      title: 'Database optimization',
-      description: 'Optimize database queries and indexes',
-      status: 'pending',
-      priority: 'low',
-      assignee: 'Mike Johnson',
-      dueDate: '2024-01-25',
-      createdAt: '2024-01-10'
-    }
-  ];
+  useEffect(() => {
+    // Clear any errors when component mounts
+    dispatch(clearError());
+  }, [dispatch]);
 
+  // Mock users data for now
   const mockUsers: User[] = [
     {
       id: '1',
@@ -108,12 +77,26 @@ const AdminDashboard = () => {
     }
   ];
 
-  const handleEditTask = (task: Task) => {
-    console.log('Edit task:', task);
+  const stats = {
+    totalUsers: mockUsers.length,
+    totalTasks: tasks.length,
+    completedTasks: tasks.filter(t => t.status === 'done').length,
+    pendingTasks: tasks.filter(t => t.status === 'todo').length
   };
 
-  const handleDeleteTask = (taskId: string) => {
-    console.log('Delete task:', taskId);
+  const handleEditTask = (task: any) => {
+    setCurrentTask(task);
+    setShowEditTask(true);
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    if (window.confirm('Are you sure you want to delete this task?')) {
+      try {
+        await dispatch(deleteTask(taskId)).unwrap();
+      } catch (error) {
+        console.error('Failed to delete task:', error);
+      }
+    }
   };
 
   const handleEditUser = (user: User) => {
@@ -122,6 +105,19 @@ const AdminDashboard = () => {
 
   const handleDeleteUser = (userId: string) => {
     console.log('Delete user:', userId);
+  };
+
+  const handleCreateTask = () => {
+    setShowCreateTask(true);
+  };
+
+  const handleCloseCreateTask = () => {
+    setShowCreateTask(false);
+  };
+
+  const handleCloseEditTask = () => {
+    setShowEditTask(false);
+    setCurrentTask(null);
   };
 
   const renderContent = () => {
@@ -241,16 +237,35 @@ const AdminDashboard = () => {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-white">Tasks</h2>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
+              <button 
+                onClick={handleCreateTask}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
+              >
                 <Plus size={20} />
                 <span>Add Task</span>
               </button>
             </div>
-            <TaskTable
-              tasks={mockTasks}
-              onEdit={handleEditTask}
-              onDelete={handleDeleteTask}
-            />
+
+            {/* Error Display */}
+            {error && (
+              <div className="bg-red-900/20 border border-red-800 rounded-xl p-4">
+                <p className="text-red-400">{error}</p>
+              </div>
+            )}
+
+            {loading ? (
+              <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                </div>
+              </div>
+            ) : (
+              <TaskTable
+                tasks={tasks}
+                onEdit={handleEditTask}
+                onDelete={handleDeleteTask}
+              />
+            )}
           </div>
         );
 
@@ -266,7 +281,9 @@ const AdminDashboard = () => {
               >
                 <div className="h-64 bg-gray-800 rounded-lg flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-white mb-2">63%</div>
+                    <div className="text-3xl font-bold text-white mb-2">
+                      {tasks.length > 0 ? Math.round((stats.completedTasks / stats.totalTasks) * 100) : 0}%
+                    </div>
                     <div className="text-gray-400">Completed</div>
                   </div>
                 </div>
@@ -279,8 +296,8 @@ const AdminDashboard = () => {
               >
                 <div className="h-64 bg-gray-800 rounded-lg flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-white mb-2">847</div>
-                    <div className="text-gray-400">Active Today</div>
+                    <div className="text-3xl font-bold text-white mb-2">{stats.totalUsers}</div>
+                    <div className="text-gray-400">Total Users</div>
                   </div>
                 </div>
               </ChartCard>
@@ -326,6 +343,23 @@ const AdminDashboard = () => {
           {renderContent()}
         </div>
       </main>
+
+      {/* Create Task Modal */}
+      {showCreateTask && (
+        <TaskForm
+          mode="create"
+          onClose={handleCloseCreateTask}
+        />
+      )}
+
+      {/* Edit Task Modal */}
+      {showEditTask && currentTask && (
+        <TaskForm
+          mode="edit"
+          task={currentTask}
+          onClose={handleCloseEditTask}
+        />
+      )}
     </div>
   );
 };

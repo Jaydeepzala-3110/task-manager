@@ -8,7 +8,6 @@ import Hero from "./components/Hero";
 import FAQ from "./components/Faqs";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import DashboardRouter from "./components/dashboards/DashboardRouter";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./components/admindashboard";
 import MemberDashboard from "./components/memberdashboard";
@@ -35,7 +34,7 @@ function App() {
               path="/dashboard" 
               element={
                 <ProtectedRoute>
-                  <DashboardRouter />
+                  <MemberDashboard />
                 </ProtectedRoute>
               } 
             />

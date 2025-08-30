@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { register, clearError } from '../store/authSlice';
+import { register as registerUser, clearError } from '../store/authSlice';
 import { registerSchema, type RegisterFormData } from '../lib/validations';
 
 const Register = () => {
@@ -14,9 +14,9 @@ const Register = () => {
   const { loading, error, isAuthenticated, user } = useAppSelector((state) => state.auth);
 
   const {
-    register: registerField,
+    register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -35,7 +35,7 @@ const Register = () => {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      await dispatch(register(data)).unwrap();
+      await dispatch(registerUser(data)).unwrap();
       
       // Show success message or redirect
       reset();
@@ -86,7 +86,7 @@ const Register = () => {
                 </label>
                 <div className="mt-2">
                   <input
-                    {...registerField('username')}
+                    {...register('username')}
                     id="name"
                     name="name"
                     type="text"
@@ -111,7 +111,7 @@ const Register = () => {
                 </label>
                 <div className="mt-2">
                   <input
-                    {...registerField('email')}
+                    {...register('email')}
                     id="email"
                     name="email"
                     type="email"
@@ -136,7 +136,7 @@ const Register = () => {
                 </label>
                 <div className="mt-2 relative">
                   <input
-                    {...registerField('password')}
+                    {...register('password')}
                     id="password"
                     name="password"
                     type={showPassword ? 'text' : 'password'}
