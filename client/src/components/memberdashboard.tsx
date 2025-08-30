@@ -250,34 +250,34 @@ const MemberDashboard = () => {
         );
 
       case "settings":
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-white">Settings</h2>
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-4">
-                    Preferences
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-300">Email Notifications</span>
-                      <button className="w-12 h-6 bg-blue-600 rounded-full relative">
-                        <div className="w-4 h-4 bg-white rounded-full absolute top-1 right-1"></div>
-                      </button>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-300">Dark Mode</span>
-                      <button className="w-12 h-6 bg-blue-600 rounded-full relative">
-                        <div className="w-4 h-4 bg-white rounded-full absolute top-1 right-1"></div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+      //   return (
+      //     <div className="space-y-6">
+      //       <h2 className="text-2xl font-bold text-white">Settings</h2>
+      //       <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      //         <div className="space-y-6">
+      //           <div>
+      //             <h3 className="text-lg font-semibold text-white mb-4">
+      //               Preferences
+      //             </h3>
+      //             <div className="space-y-4">
+      //               <div className="flex items-center justify-between">
+      //                 <span className="text-gray-300">Email Notifications</span>
+      //                 <button className="w-12 h-6 bg-blue-600 rounded-full relative">
+      //                   <div className="w-4 h-4 bg-white rounded-full absolute top-1 right-1"></div>
+      //                 </button>
+      //               </div>
+      //               <div className="flex items-center justify-between">
+      //                 <span className="text-gray-300">Dark Mode</span>
+      //                 <button className="w-12 h-6 bg-blue-600 rounded-full relative">
+      //                   <div className="w-4 h-4 bg-white rounded-full absolute top-1 right-1"></div>
+      //                 </button>
+      //               </div>
+      //             </div>
+      //           </div>
+      //         </div>
+      //       </div>
+      //     </div>
+      //   );
 
       default:
         return null;

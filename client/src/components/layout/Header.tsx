@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Search, 
   Bell, 
-  User, 
-  Settings, 
   LogOut,
   ChevronDown,
   Menu
@@ -90,19 +88,9 @@ const Header = ({ isCollapsed, onToggleSidebar, userRole }: HeaderProps) => {
               <ChevronDown size={16} className="text-gray-400" />
             </button>
 
-            {/* Dropdown Menu */}
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-gray-900 border border-gray-700 rounded-lg shadow-xl z-50">
                 <div className="py-1">
-                  <button className="flex items-center w-full px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
-                    <User size={16} className="mr-3" />
-                    Profile
-                  </button>
-                  <button className="flex items-center w-full px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
-                    <Settings size={16} className="mr-3" />
-                    Settings
-                  </button>
-                  <hr className="border-gray-700 my-1" />
                   <button 
                     onClick={handleLogout}
                     className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-gray-800 transition-colors"
