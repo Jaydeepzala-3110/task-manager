@@ -11,7 +11,7 @@ services:
   frontend:
     build: ./client
     container_name: frontend
-    ports:
-      - "80:80"
     depends_on:
       - backend
+    ports:
+      - "80:80"
