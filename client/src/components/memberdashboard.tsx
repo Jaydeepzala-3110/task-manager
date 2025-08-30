@@ -18,7 +18,7 @@ import TaskForm from "./TaskForm";
 const MemberDashboard = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const { tasks, loading, error, meta } = useAppSelector((state) => state.tasks);
+  const { tasks, loading, error } = useAppSelector((state) => state.tasks);
   
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("tasks");

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Filter, X, SortAsc, SortDesc, Calendar, User, Tag } from 'lucide-react';
+import { Search, Filter, X, SortAsc, SortDesc } from 'lucide-react';
 
 interface TaskSearchFilterProps {
   onSearch: (searchTerm: string) => void;

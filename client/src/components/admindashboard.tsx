@@ -151,15 +151,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // Mock users data for nowx
- 
-
-  const stats = {
-    totalUsers: dashboardOverview?.totalUsers || 0,
-    totalTasks: dashboardOverview?.totalTasks || tasks.length,
-    completedTasks: dashboardOverview?.tasksByStatus?.find((s: any) => s.status === 'done')?.count || tasks.filter(t => t.status === 'done').length,
-    pendingTasks: dashboardOverview?.tasksByStatus?.find((s: any) => s.status === 'todo')?.count || tasks.filter(t => t.status === 'todo').length
-  };
 
   const handleEditTask = (task: any) => {
     setCurrentTask(task);

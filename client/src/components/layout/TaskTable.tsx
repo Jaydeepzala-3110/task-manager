@@ -1,4 +1,4 @@
-import { Edit, Trash2, MoreHorizontal, Calendar, Flag, ClipboardList } from 'lucide-react';
+import { Edit, Trash2, Calendar, Flag, ClipboardList } from 'lucide-react';
 import { type Task } from '../../store/taskSlice';
 
 interface TaskTableProps {
